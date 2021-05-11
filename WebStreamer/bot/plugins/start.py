@@ -17,7 +17,7 @@ async def start(b, m):
         await db.add_user(m.from_user.id)
         await b.send_message(
             Var.BIN_CHANNEL,
-            f"#NEW_USER: \n\nNouveau utilisateur [{m.from_user.first_name}](tg://user?id={m.from_user.id}) a demarré le bot !!",
+            f"#NEW_USER: \n\nNouvel utilisateur [{m.from_user.first_name}](tg://user?id={m.from_user.id}) a demarré le bot!",
         )
     usr_cmd = m.text.split("_")[-1]
     if usr_cmd == "/start":
@@ -27,7 +27,7 @@ async def start(b, m):
                 if user.status == "kicked":
                     await b.send_message(
                         chat_id=m.chat.id,
-                        text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
+                        text="Désolé, monsieur, vous êtes interdit de m'utiliser. Contactez mon [Groupe de support] (https://t.me/scriptshadowtools).",
                         parse_mode="markdown",
                         disable_web_page_preview=True,
                     )
@@ -35,7 +35,7 @@ async def start(b, m):
             except UserNotParticipant:
                 await b.send_message(
                     chat_id=m.chat.id,
-                    text="**Please Join My Updates Channel to use this Bot!**\n\nDue to Overload, Only Channel Subscribers can use the Bot!",
+                    text="**Veuillez rejoindre mon canal de mises à jour pour utiliser ce Bot!**\n\nEn raison de la surcharge, seuls les abonnés du canal peuvent utiliser le Bot!",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
@@ -52,7 +52,7 @@ async def start(b, m):
             except Exception:
                 await b.send_message(
                     chat_id=m.chat.id,
-                    text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
+                    text="Quelque chose s'est mal passé. Contactez mon [groupe de support] (https://t.me/scriptshadowtools)",
                     parse_mode="markdown",
                     disable_web_page_preview=True,
                 )
@@ -86,7 +86,7 @@ async def start(b, m):
                 if user.status == "kicked":
                     await b.send_message(
                         chat_id=m.chat.id,
-                        text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
+                        text="Désolé, monsieur, vous êtes interdit de m'utiliser. Contactez mon [Groupe de support] (https://t.me/scriptshadowtools).",
                         parse_mode="markdown",
                         disable_web_page_preview=True,
                     )
@@ -94,7 +94,7 @@ async def start(b, m):
             except UserNotParticipant:
                 await b.send_message(
                     chat_id=m.chat.id,
-                    text="**Please Join My Updates Channel to use this Bot!**\n\nDue to Overload, Only Channel Subscribers can use the Bot!",
+                    text="**Veuillez rejoindre mon canal de mises à jour pour utiliser ce Bot!**\n\nEn raison de la surcharge, seuls les abonnés du canal peuvent utiliser le Bot!",
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
@@ -117,7 +117,7 @@ async def start(b, m):
             except Exception:
                 await b.send_message(
                     chat_id=m.chat.id,
-                    text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
+                    text="Quelque chose s'est mal passé. Contactez mon [groupe de support] (https://t.me/scriptshadowtools)",
                     parse_mode="markdown",
                     disable_web_page_preview=True,
                 )
@@ -165,7 +165,7 @@ async def help_handler(bot, message):
         await db.add_user(message.from_user.id)
         await bot.send_message(
             Var.BIN_CHANNEL,
-            f"#NEW_USER: \n\nNew User [{message.from_user.first_name}](tg://user?id={message.from_user.id}) Started !!",
+            f"#NEW_USER: \n\nNouvel utilisateur [{message.from_user.first_name}](tg://user?id={message.from_user.id}) a demarré le Bot !!",
         )
     if Var.UPDATES_CHANNEL is not None:
         try:
@@ -173,7 +173,7 @@ async def help_handler(bot, message):
             if user.status == "kicked":
                 await bot.send_message(
                     chat_id=message.chat.id,
-                    text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
+                    text="Désolé, monsieur, vous êtes interdit de m'utiliser. Contactez mon [Groupe de support] (https://t.me/scriptshadowtools).",
                     parse_mode="markdown",
                     disable_web_page_preview=True,
                 )
@@ -181,7 +181,7 @@ async def help_handler(bot, message):
         except UserNotParticipant:
             await bot.send_message(
                 chat_id=message.chat.id,
-                text="**Please Join My Updates Channel to use this Bot!**\n\nDue to Overload, Only Channel Subscribers can use the Bot!",
+                text="**Veuillez rejoindre mon canal de mises à jour pour utiliser ce Bot!!**\n\nEn raison de la surcharge, seuls les abonnés du canal peuvent utiliser le Bot!",
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -198,13 +198,13 @@ async def help_handler(bot, message):
         except Exception:
             await bot.send_message(
                 chat_id=message.chat.id,
-                text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
+                text="Quelque chose s'est mal passé. Contactez mon [Groupe de support](https://t.me/linux_repo).",
                 parse_mode="markdown",
                 disable_web_page_preview=True,
             )
             return
     await message.reply_text(
-        text="Send me any File I will provide External Direct Download Link!\n\nAlso I am Supported in Channels. Add me to Channel as Admin to Make Me Workable!",
+        text="Envoie-moi n'importe quel fichier, je te fournirai un lien de téléchargement direct!\n\nJe suis pris en charge dans les canaux. Ajoute-moi à ta chaîne comme admin et laisse moi faire le travail!",
         parse_mode="Markdown",
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup(

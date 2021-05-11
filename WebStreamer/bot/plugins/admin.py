@@ -13,22 +13,38 @@ from WebStreamer.bot import StreamBot
 from WebStreamer.vars import Var
 from pyrogram import filters, Client
 from pyrogram.types import Message
+
 db = Database(Var.DATABASE_URL, Var.SESSION_NAME)
 broadcast_ids = {}
 
 
-@StreamBot.on_message(filters.command("status") & filters.private & filters.user(Var.OWNER_ID) & ~filters.edited)
+@StreamBot.on_message(
+    filters.command("status")
+    & filters.private
+    & filters.user(Var.OWNER_ID)
+    & ~filters.edited
+)
 async def sts(c: Client, m: Message):
     total_users = await db.total_users_count()
-    await m.reply_text(text=f"**Total Users in DB:** `{total_users}`", parse_mode="Markdown", quote=True)
+    await m.reply_text(
+        text=f"**Utilisateurs total dans DB:** `{total_users}`",
+        parse_mode="Markdown",
+        quote=True,
+    )
 
 
-@StreamBot.on_message(filters.command("broadcast") & filters.private & filters.user(Var.OWNER_ID) & filters.reply & ~filters.edited)
+@StreamBot.on_message(
+    filters.command("broadcast")
+    & filters.private
+    & filters.user(Var.OWNER_ID)
+    & filters.reply
+    & ~filters.edited
+)
 async def broadcast_(c, m):
     all_users = await db.get_all_users()
     broadcast_msg = m.reply_to_message
     while True:
-        broadcast_id = ''.join([random.choice(string.ascii_letters) for i in range(3)])
+        broadcast_id = "".join([random.choice(string.ascii_letters) for i in range(3)])
         if not broadcast_ids.get(broadcast_id):
             break
     out = await m.reply_text(
@@ -40,17 +56,11 @@ async def broadcast_(c, m):
     failed = 0
     success = 0
     broadcast_ids[broadcast_id] = dict(
-        total=total_users,
-        current=done,
-        failed=failed,
-        success=success
+        total=total_users, current=done, failed=failed, success=success
     )
-    async with aiofiles.open('broadcast.txt', 'w') as broadcast_log_file:
+    async with aiofiles.open("broadcast.txt", "w") as broadcast_log_file:
         async for user in all_users:
-            sts, msg = await send_msg(
-                user_id=int(user['id']),
-                message=broadcast_msg
-            )
+            sts, msg = await send_msg(user_id=int(user["id"]), message=broadcast_msg)
             if msg is not None:
                 await broadcast_log_file.write(msg)
             if sts == 200:
@@ -58,17 +68,13 @@ async def broadcast_(c, m):
             else:
                 failed += 1
             if sts == 400:
-                await db.delete_user(user['id'])
+                await db.delete_user(user["id"])
             done += 1
             if broadcast_ids.get(broadcast_id) is None:
                 break
             else:
                 broadcast_ids[broadcast_id].update(
-                    dict(
-                        current=done,
-                        failed=failed,
-                        success=success
-                    )
+                    dict(current=done, failed=failed, success=success)
                 )
     if broadcast_ids.get(broadcast_id):
         broadcast_ids.pop(broadcast_id)
@@ -78,12 +84,12 @@ async def broadcast_(c, m):
     if failed == 0:
         await m.reply_text(
             text=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
-            quote=True
+            quote=True,
         )
     else:
         await m.reply_document(
-            document='broadcast.txt',
+            document="broadcast.txt",
             caption=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
-            quote=True
+            quote=True,
         )
-    os.remove('broadcast.txt')
+    os.remove("broadcast.txt")
