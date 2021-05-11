@@ -7,16 +7,17 @@ from WebStreamer.utils.database import Database
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
+
 db = Database(Var.DATABASE_URL, Var.SESSION_NAME)
 
 
-@StreamBot.on_message(filters.command('start') & filters.private & ~filters.edited)
+@StreamBot.on_message(filters.command("start") & filters.private & ~filters.edited)
 async def start(b, m):
     if not await db.is_user_exist(m.from_user.id):
         await db.add_user(m.from_user.id)
         await b.send_message(
             Var.BIN_CHANNEL,
-            f"#NEW_USER: \n\nNew User [{m.from_user.first_name}](tg://user?id={m.from_user.id}) Started !!"
+            f"#NEW_USER: \n\nNouveau utilisateur [{m.from_user.first_name}](tg://user?id={m.from_user.id}) a demarré le bot !!",
         )
     usr_cmd = m.text.split("_")[-1]
     if usr_cmd == "/start":
@@ -28,7 +29,7 @@ async def start(b, m):
                         chat_id=m.chat.id,
                         text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
                         parse_mode="markdown",
-                        disable_web_page_preview=True
+                        disable_web_page_preview=True,
                     )
                     return
             except UserNotParticipant:
@@ -38,11 +39,14 @@ async def start(b, m):
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
-                                InlineKeyboardButton("🤖 Join Updates Channel", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
+                                InlineKeyboardButton(
+                                    "🤖 Rejoindre notre canal",
+                                    url=f"https://t.me/{Var.UPDATES_CHANNEL}",
+                                )
                             ]
                         ]
                     ),
-                    parse_mode="markdown"
+                    parse_mode="markdown",
                 )
                 return
             except Exception:
@@ -50,17 +54,30 @@ async def start(b, m):
                     chat_id=m.chat.id,
                     text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
                     parse_mode="markdown",
-                    disable_web_page_preview=True)
+                    disable_web_page_preview=True,
+                )
                 return
         await m.reply_text(
-            text='🙋 Hey Bruh!!\nI am Instant Telegram File to Link Generator Bot.\n\nSend me any file & see the magic!',
+            text="🙋 Salut Bro!!\nJe suis un Bot de generateur de lien direct.\n\nEnvoie moi un fichier et observe la magie!",
             reply_markup=InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton('Channel', url='https://t.me/XStream_Flix'), InlineKeyboardButton('Support Group', url='https://t.me/joinchat/2VULyCTHCoU5ZDM9')],
-                    [InlineKeyboardButton('Developer', url='https://t.me/ShivamTheSkywalker')]
+                    [
+                        InlineKeyboardButton(
+                            "Canal", url="https://t.me/scriptshadowtools"
+                        ),
+                        InlineKeyboardButton(
+                            "Groupe",
+                            url="https://t.me/joinchat/zsWW7lYSh7BiNTA0",
+                        ),
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "Developpeur", url="https://t.me/scriptshadow"
+                        )
+                    ],
                 ]
             ),
-            disable_web_page_preview=True
+            disable_web_page_preview=True,
         )
     else:
         if Var.UPDATES_CHANNEL is not None:
@@ -71,7 +88,7 @@ async def start(b, m):
                         chat_id=m.chat.id,
                         text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
                         parse_mode="markdown",
-                        disable_web_page_preview=True
+                        disable_web_page_preview=True,
                     )
                     return
             except UserNotParticipant:
@@ -81,15 +98,20 @@ async def start(b, m):
                     reply_markup=InlineKeyboardMarkup(
                         [
                             [
-                                InlineKeyboardButton("🤖 Join Updates Channel", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
+                                InlineKeyboardButton(
+                                    "🤖 Rejoindre notre canal",
+                                    url=f"https://t.me/{Var.UPDATES_CHANNEL}",
+                                )
                             ],
                             [
-                                InlineKeyboardButton("🔄 Refresh / Try Again",
-                                                     url=f"https://t.me/AH_File2Link_Bot?start=AbirHasan2005_{usr_cmd}")
-                            ]
+                                InlineKeyboardButton(
+                                    "🔄 Actualiser / Reessayer svp",
+                                    url=f"https://t.me/AH_File2Link_Bot?start=AbirHasan2005_{usr_cmd}",
+                                )
+                            ],
                         ]
                     ),
-                    parse_mode="markdown"
+                    parse_mode="markdown",
                 )
                 return
             except Exception:
@@ -97,10 +119,13 @@ async def start(b, m):
                     chat_id=m.chat.id,
                     text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
                     parse_mode="markdown",
-                    disable_web_page_preview=True)
+                    disable_web_page_preview=True,
+                )
                 return
 
-        get_msg = await b.get_messages(chat_id=Var.BIN_CHANNEL, message_ids=int(usr_cmd))
+        get_msg = await b.get_messages(
+            chat_id=Var.BIN_CHANNEL, message_ids=int(usr_cmd)
+        )
 
         file_size = None
         if get_msg.video:
@@ -118,26 +143,29 @@ async def start(b, m):
         elif get_msg.audio:
             file_name = f"{get_msg.audio.file_name}"
 
-        stream_link = "https://{}/{}".format(Var.FQDN, get_msg.message_id) if Var.ON_HEROKU or Var.NO_PORT else \
-            "http://{}:{}/{}".format(Var.FQDN,
-                                     Var.PORT,
-                                     get_msg.message_id)
+        stream_link = (
+            "https://{}/{}".format(Var.FQDN, get_msg.message_id)
+            if Var.ON_HEROKU or Var.NO_PORT
+            else "http://{}:{}/{}".format(Var.FQDN, Var.PORT, get_msg.message_id)
+        )
 
-        msg_text = "Bruh! 😁\nYour Link Generated! 🤓\n\n📂 **File Name:** `{}`\n**File Size:** `{}`\n\n📥 **Download Link:** `{}`"
+        msg_text = "Bro! 😁\nTon lien a été généré! 🤓\n\n📂 **Nom du fichier:** `{}`\n**Taille du fichier:** `{}`\n\n📥 **Lien de téléchargement:** `{}`"
         await m.reply_text(
             text=msg_text.format(file_name, file_size, stream_link),
             parse_mode="Markdown",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("Download Now", url=stream_link)]])
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("Télécharger", url=stream_link)]]
+            ),
         )
 
 
-@StreamBot.on_message(filters.command('help') & filters.private & ~filters.edited)
+@StreamBot.on_message(filters.command("help") & filters.private & ~filters.edited)
 async def help_handler(bot, message):
     if not await db.is_user_exist(message.from_user.id):
         await db.add_user(message.from_user.id)
         await bot.send_message(
             Var.BIN_CHANNEL,
-            f"#NEW_USER: \n\nNew User [{message.from_user.first_name}](tg://user?id={message.from_user.id}) Started !!"
+            f"#NEW_USER: \n\nNew User [{message.from_user.first_name}](tg://user?id={message.from_user.id}) Started !!",
         )
     if Var.UPDATES_CHANNEL is not None:
         try:
@@ -147,7 +175,7 @@ async def help_handler(bot, message):
                     chat_id=message.chat.id,
                     text="Sorry Sir, You are Banned to use me. Contact my [Support Group](https://t.me/linux_repo).",
                     parse_mode="markdown",
-                    disable_web_page_preview=True
+                    disable_web_page_preview=True,
                 )
                 return
         except UserNotParticipant:
@@ -157,11 +185,14 @@ async def help_handler(bot, message):
                 reply_markup=InlineKeyboardMarkup(
                     [
                         [
-                            InlineKeyboardButton("🤖 Join Updates Channel", url=f"https://t.me/{Var.UPDATES_CHANNEL}")
+                            InlineKeyboardButton(
+                                "🤖 Rejoindre notre canal",
+                                url=f"https://t.me/{Var.UPDATES_CHANNEL}",
+                            )
                         ]
                     ]
                 ),
-                parse_mode="markdown"
+                parse_mode="markdown",
             )
             return
         except Exception:
@@ -169,7 +200,8 @@ async def help_handler(bot, message):
                 chat_id=message.chat.id,
                 text="Something went Wrong. Contact my [Support Group](https://t.me/linux_repo).",
                 parse_mode="markdown",
-                disable_web_page_preview=True)
+                disable_web_page_preview=True,
+            )
             return
     await message.reply_text(
         text="Send me any File I will provide External Direct Download Link!\n\nAlso I am Supported in Channels. Add me to Channel as Admin to Make Me Workable!",
@@ -177,8 +209,15 @@ async def help_handler(bot, message):
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup(
             [
-                [InlineKeyboardButton("Support Group", url="https://t.me/XStream_Flix"), InlineKeyboardButton("Bots Channel", url="https://t.me/XStream_Flix")],
-                [InlineKeyboardButton("Developer", url="https://t.me/ShivamTheSkywalker")]
+                [
+                    InlineKeyboardButton(
+                        "Groupe", url="https://t.me/joinchat/zsWW7lYSh7BiNTA0"
+                    ),
+                    InlineKeyboardButton(
+                        "Canal du Bot", url="https://t.me/scriptshadowtools"
+                    ),
+                ],
+                [InlineKeyboardButton("Developpeur", url="https://t.me/scriptshadow")],
             ]
-        )
+        ),
     )
